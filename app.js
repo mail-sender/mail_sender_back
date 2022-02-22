@@ -7,6 +7,15 @@ const bodyParser = require('body-parser');
 
 require("dotenv/config");
 
+// logging
+const log = require('./config/logger');
+
+// usage example
+// logger.error('text error');
+
+// Log Level
+// error, warn, info, http, debug
+
 const app = express();
 app.use(bodyParser.json());
 
