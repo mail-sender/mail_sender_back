@@ -8,15 +8,17 @@ const userSchema = mongoose.Schema({
     email: {
         type: String,
         required: true,
+        unique: true,
     },
     password: {
         type: String,
         required: true,
     },
     join_date: {
-        type: Date,
-        default: Date.now
+        type: String,
+        required: true,
     }
 });
 
 module.exports = mongoose.model('user', userSchema);
+
