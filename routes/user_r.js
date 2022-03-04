@@ -41,4 +41,15 @@ router.delete('/:userId', async (req, res) => {
     userFunc.deleteUser(req, res);
 });
 
+// 회원 > 로그인
+router.post('/login', async (req, res) => {
+    userFunc.login(req, res);
+});
+
+// 회원 > 로그아웃
+router.post('/logout', async (req, res) => {
+    return res.cookie("x_auth", "").json({ status: 'logout_success' });
+});
+
+
 module.exports = router;
