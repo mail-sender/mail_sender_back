@@ -11,7 +11,7 @@ require("dotenv/config");
 const log = require('./config/logger');
 
 // usage example
-// logger.error('text error');
+// log.error('text error');
 
 // Log Level
 // error, warn, info, http, debug
@@ -19,11 +19,16 @@ const log = require('./config/logger');
 const app = express();
 app.use(bodyParser.json());
 
-//route
+// user route
 const userRoute = require("./routes/user_r");
 app.use('/user', userRoute);
+
+// mail route
+const mailRoute = require("./routes/mail_r");
+app.use('/mail', mailRoute);
+
 app.use('/', (req, res) => {
-    res.send('just index, go to GET /user');
+  res.send('just index, go to GET /test');
 });
 
 app.set('views', path.join(__dirname, 'views'));
