@@ -27,6 +27,10 @@ app.use('/user', userRoute);
 const mailRoute = require("./routes/mail_r");
 app.use('/mail', mailRoute);
 
+// account route
+const accountRoute = require("./routes/account_r");
+app.use('/account', accountRoute);
+
 app.use('/', (req, res) => {
   res.send('just index, go to GET /test');
 });

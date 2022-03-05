@@ -19,8 +19,7 @@ router.post('/', async (req, res) => {
 });
 
 // 회원 > 수정
-router.post('/modify', async (req, res) => {
-    req.body.userId = "621b771ef7a28eb24dfc745f"; // session으로 _id 담아야함, 로그인 작업할 때 ㄱㄱ
+router.post('/modify/:userId', async (req, res) => {
     userFunc.updateUser(req, res);
 });
 
@@ -37,7 +36,7 @@ router.get('/modify', async (req, res) => {
 */
 
 // 회원 > 탈퇴
-router.delete('/:userId', async (req, res) => {
+router.delete('/delete/:userId', async (req, res) => {
     userFunc.deleteUser(req, res);
 });
 

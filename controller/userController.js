@@ -12,8 +12,7 @@ exports.addUser = function(req, res) {
     user_m.findOne({email: req.body.email}, (err, user) => {
         if(user) {
             log.debug("존재하는 회원입니다."+req.body.email);
-            log.debug("user: "+user);
-           res.json({ message: "이미 존재하는 회원입니다."});
+            res.json({ message: common.getErrorCode("user_exist") });
         } else {
             const user = new user_m({
                 name: req.body.name,
@@ -22,12 +21,9 @@ exports.addUser = function(req, res) {
                 join_date: common.getCurrentDate()
             });
             try {
-                log.debug("try");
                 const saveUser = user.save();
-                console.log(saveUser);
-                res.json(saveUser);
+                res.json({ message: common.getErrorCode("insert_success") });
             } catch(err) {
-                log.debug("catch");
                 res.json({ message: err });
             }
         }
@@ -39,7 +35,7 @@ exports.updateUser = async function(req, res) {
     try {
         const updatedUser = await user_m.updateOne(
             { 
-                _id: req.body.userId,
+                _id: req.params.userId,
             },
             {
                 $set: {
@@ -48,6 +44,7 @@ exports.updateUser = async function(req, res) {
                 }
             }
         );
+        res.json({ message: common.getErrorCode("update_success") });
     } catch(err) {
         res.json({ message: err });
     }
@@ -56,7 +53,8 @@ exports.updateUser = async function(req, res) {
 // 회원 > 탈퇴
 exports.deleteUser = async function(req, res) {
     try {
-        const removedUser = await user_m.remove({ _id: req.params.userId });
+        const removedUser = await user_m.deleteOne({ _id: req.params.userId });
+        res.json({ message: common.getErrorCode("delete_success") });
     } catch(err) {
         res.json({ message: err });
     }
@@ -66,7 +64,7 @@ exports.deleteUser = async function(req, res) {
 exports.login = async function(req, res) {
     user_m.findOne({email: req.body.email}, (err, user) => {
         if (!user) {
-            return res.json({ status: 'login_failed', message: 'Invalid username/password' })
+            return res.json({ status: 'login_failed', message: common.getErrorCode("user_login_fail")  })
         }
     
         // 암호화
@@ -86,7 +84,7 @@ exports.login = async function(req, res) {
             })
             .json({ status: 'login_success', data: token })
         }
-        res.json({ status: 'login_failed', message: 'Invalid username/password' })
+        res.json({ status: 'login_failed', message: common.getErrorCode("user_login_fail") })
     });
 }
 
