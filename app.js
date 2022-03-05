@@ -1,20 +1,38 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var mongoose = require('mongoose');
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 
 require("dotenv/config");
 
+// logging
+const log = require('./config/logger');
+
+// usage example
+// log.error('text error');
+
+// Log Level
+// error, warn, info, http, debug
+
 const app = express();
 app.use(bodyParser.json());
 
-//route
+// user route
 const userRoute = require("./routes/user_r");
 app.use('/user', userRoute);
+
+// mail route
+const mailRoute = require("./routes/mail_r");
+app.use('/mail', mailRoute);
+
+// account route
+const accountRoute = require("./routes/account_r");
+app.use('/account', accountRoute);
+
 app.use('/', (req, res) => {
-    res.send('just index, go to GET /user');
+  res.send('just index, go to GET /test');
 });
 
 app.set('views', path.join(__dirname, 'views'));

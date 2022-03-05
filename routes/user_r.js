@@ -1,7 +1,8 @@
 const express = require('express');
-const user = require('../models/user');
 const router = express.Router();
+
 const user_m = require("../models/user");
+const userFunc = require("../controller/userController.js");
 
 router.get('/', async (req, res) => {
     try {
@@ -10,27 +11,21 @@ router.get('/', async (req, res) => {
     } catch(err) {
         res.json({ message: err });
     }
-
 });
 
+// 회원 > 가입
 router.post('/', async (req, res) => {
-    console.log(req.body);
-    const user = new user_m({
-        name: req.body.name,
-        email: req.body.email,
-        password: req.body.password,
-    });
-
-    try {
-        const saveUser = await user.save();
-        res.json(saveUser);
-    } catch(err) {
-        res.json({ message: err });
-    }
-  
+    userFunc.addUser(req, res);
 });
 
-router.get('/:userId', async (req, res) => {
+// 회원 > 수정
+router.post('/modify/:userId', async (req, res) => {
+    userFunc.updateUser(req, res);
+});
+
+// 회원 > 수정페이지
+/*
+router.get('/modify', async (req, res) => {
     try { 
         const user = await user_m.findById(req.params.userId);
         res.json(user);
@@ -38,14 +33,22 @@ router.get('/:userId', async (req, res) => {
         res.json({ message: err });
     }
 });
+*/
 
-router.delete('/:userId', async (req, res) => {
-    try {
-        const removedUser = await user_m.remove({ _id: req.params.userId });
-        res.json(removedUser);
-    } catch(err) {
-        res.json({ message: err });
-    }
+// 회원 > 탈퇴
+router.delete('/delete/:userId', async (req, res) => {
+    userFunc.deleteUser(req, res);
 });
+
+// 회원 > 로그인
+router.post('/login', async (req, res) => {
+    userFunc.login(req, res);
+});
+
+// 회원 > 로그아웃
+router.post('/logout', async (req, res) => {
+    return res.cookie("x_auth", "").json({ status: 'logout_success' });
+});
+
 
 module.exports = router;
