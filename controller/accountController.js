@@ -14,7 +14,9 @@ exports.addAccount = function(req, res) {
         account_name: req.body.account_name,
         name: req.body.name,
         email: req.body.email,
+        password: req.body.password,
         smtp_server: req.body.smtp_server,
+        port: req.body.port,
         account_date: common.getCurrentDate(),
     });
     try {
@@ -37,7 +39,9 @@ exports.updateAccount = async function(req, res) {
                     account_name: req.body.account_name,
                     name: req.body.name,
                     email: req.body.email,
+                    password: req.body.password,
                     smtp_server: req.body.smtp_server,
+                    port: req.body.port
                 }
             }
         );
@@ -57,3 +61,9 @@ exports.deleteAccount = async function(req, res) {
     }
 }
 
+// account > load
+exports.loadAccount = async function(req, res) {
+    account_m.findOne({user_id: req.body.user_id}, (err, acct) => {
+        res.json({ msg : acct })
+    });
+}

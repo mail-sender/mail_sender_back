@@ -17,7 +17,15 @@ const accountSchema = mongoose.Schema({
         type: String,
         required: true,
     },
+    password: {
+        type: String,
+        required: true,
+    },
     smtp_server: {
+        type: String,
+        required: true,
+    },
+    port: {
         type: String,
         required: true,
     },
