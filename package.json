@@ -31,6 +31,7 @@
     "moment": "^2.29.1",
     "moment-timezone": "^0.5.34",
     "mongoose": "^6.2.3",
+    "nodemailer": "^6.7.2",
     "nodemon": "^2.0.15",
     "path": "^0.12.7",
     "route": "^0.2.5",

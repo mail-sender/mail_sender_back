@@ -12,7 +12,7 @@ exports.addUser = function(req, res) {
     user_m.findOne({email: req.body.email}, (err, user) => {
         if(user) {
             log.debug("존재하는 회원입니다."+req.body.email);
-            res.json({ message: common.getErrorCode("user_exist") });
+            res.json({ message: common.getErrorCode("user_exist"), user_id: user._id });
         } else {
             const user = new user_m({
                 name: req.body.name,

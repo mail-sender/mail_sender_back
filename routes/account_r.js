@@ -18,4 +18,10 @@ router.delete('/delete/:accountId', async (req, res) => {
     accountFunc.deleteAccount(req, res);
 });
 
+// account > load
+router.post('/load', async (req, res) => {
+    accountFunc.loadAccount(req, res);
+});
+
+
 module.exports = router;
