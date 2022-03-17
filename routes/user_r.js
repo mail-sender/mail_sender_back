@@ -14,7 +14,7 @@ router.get('/', async (req, res) => {
 });
 
 // 회원 > 가입
-router.post('/', async (req, res) => {
+router.post('/signup', async (req, res) => {
     userFunc.addUser(req, res);
 });
 
