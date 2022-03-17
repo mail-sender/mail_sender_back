@@ -1,9 +1,5 @@
 const log = require('../config/logger');
-const jwt = require('jsonwebtoken');
-const JWT_SECRET = require('../config').key;
-const JWT_OPTIONS = require('../config').option;
 const nodemailer = require('nodemailer');
-
 
 // mail > send
 exports.sendMail = async function(req, res) {
@@ -14,7 +10,6 @@ exports.sendMail = async function(req, res) {
     const cc = req.body.cc;
 
     let transporter = nodemailer.createTransport({
-        service: 'gmail',
         host: sender.smtp_server,
         secure: false,
         port: sender.port,

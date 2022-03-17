@@ -1,10 +1,8 @@
 const mongoose = require('mongoose');
+const ObjectId = mongoose.Schema.Types.ObjectId;
 
 const accountSchema = mongoose.Schema({
-    user_id: {
-        type: String,
-        required: true,
-    },
+    _id: { type: ObjectId },
     account_name: {
         type: String,
         required: true,
@@ -28,12 +26,5 @@ const accountSchema = mongoose.Schema({
     port: {
         type: String,
         required: true,
-    },
-    account_date: {
-        type: String,
-        required: true,
     }
 });
-
-module.exports = mongoose.model('account', accountSchema);
-
