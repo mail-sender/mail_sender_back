@@ -19,7 +19,7 @@ router.post('/signup', async (req, res) => {
 });
 
 // 회원 > 수정
-router.post('/modify/:userId', async (req, res) => {
+router.put('/modify/:userId', async (req, res) => {
     userFunc.updateUser(req, res);
 });
 

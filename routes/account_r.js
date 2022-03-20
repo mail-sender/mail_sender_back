@@ -9,7 +9,7 @@ router.post('/add', async (req, res) => {
 });
 
 // account > update 
-router.post('/modify', async (req, res) => {
+router.put('/modify', async (req, res) => {
     accountFunc.updateAccount(req, res);
 });
 
