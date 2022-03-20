@@ -31,6 +31,10 @@ app.use('/mail', mailRoute);
 const accountRoute = require("./routes/account_r");
 app.use('/account', accountRoute);
 
+// bodyFormat route
+const bodyFormatRoute = require("./routes/bodyFormat_r");
+app.use('/bodyformat', bodyFormatRoute);
+
 app.use('/', (req, res) => {
   res.send('just index, go to GET /test');
 });
