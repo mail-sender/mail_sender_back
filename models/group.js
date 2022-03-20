@@ -1,10 +1,12 @@
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Schema.Types.ObjectId;
-const groupSchema = require('./group');
+const receiverSchema = require('./receiver');
 
 const contactSchema = mongoose.Schema({
     _id: { type: ObjectId },
-    group: [groupSchema]
+    name: {
+        type: String,
+        required: true,
+    },
+    receivers: [receiverSchema]
 });
-
-module.exports = mongoose.model('contact', contactSchema);
