@@ -1,76 +1,77 @@
 const log = require('../config/logger');
 const contact_m = require("../models/contact");
 const { default: mongoose } = require('mongoose');
+const { ObjectId } = require('bson');
 
 // contact > insert
-exports.addContact = async function(req, res) {
-    contact_m.findOne({_id: mongoose.Types.ObjectId(req.body.user_id) }, (err, contact) => {
-        if(contact) {
-          
-        } else {
-            const contact = new contact_m({
-                _id: mongoose.Types.ObjectId(req.body.user_id),
-            });
-            try {
-                const saveContact = contact.save();
-                res.json({ message: "Contact _id 추가 완료" });
-            } catch(err) {
-                res.json({ message: err });
-            }
-        }
-    });
-
+exports.addContactGroup = async function(req, res) {
     var group_info = {
-        _id: mongoose.Types.ObjectId(),
+        _id: ObjectId(),
         name: req.body.name
     }
-
     try {
         await contact_m.findOneAndUpdate(
-            { _id: mongoose.Types.ObjectId(req.body.user_id) },
+            { 
+                _id: ObjectId(req.body.contact_id) 
+            },
             {
                 $push: { 
-                    group: group_info 
+                    groups : group_info 
                 }
-            }, { new: true }
+            }, 
+            { new: true }
         ).then(function(msg) {
             console.log("msg: "+msg);
         });
-        res.json({ message: "Contact 추가 완료" });
+        res.json({ message: "Contact group 추가 완료" });
     } catch(err) {
-        res.json({ message: "Contact 추가 실패: " + err });
+        res.json({ message: "Contact group 추가 실패: " + err });
     }
 }
 
 // contact > update 
-exports.updateContact = async function(req, res) {
-    var group_info = {
-        _id: mongoose.Types.ObjectId(req.body.group_id),
-        name: req.body.name
-    }
+exports.updateContactGroup = async function(req, res) {
     try {
         await contact_m.findOneAndUpdate(
-            { "_id": mongoose.Types.ObjectId(req.body.user_id), "groups._id" : mongoose.Types.ObjectId(req.body.group_id) }, 
-            { $set: { group : group_info } },
+            { 
+                "_id": ObjectId(req.body.contact_id), 
+                "groups" : { 
+                    $elemMatch : { "_id" : ObjectId(req.body.group_id) } 
+                }
+            }, 
+            { $set: 
+                {
+                    "groups.$.name" : req.body.name 
+                }
+            },
             { new: true }
         ).then(function(msg) {
             console.log("msg: "+msg);
         });
         res.json({ message: "contact > group 업데이트 성공" });
     } catch(err) {
-        res.json({ message: "contact > group  업데이트 실패: catch: err: " + err });
+        res.json({ message: "contact > group 업데이트 실패: catch: err: " + err });
     }
 }
 
 // contact > delete
-exports.deleteContact = async function(req, res) {
+exports.deleteContactGroup = async function(req, res) {
     try {
         await contact_m.findOneAndUpdate(
-            { "_id": mongoose.Types.ObjectId(req.body.user_id) },
-            { $pull: {
-                'group': { '_id': mongoose.Types.ObjectId(req.body.group_id) }
-            } },
-            { new: true, multi: true }
+            { 
+                "_id": ObjectId(req.body.contact_id),
+                "groups" : { 
+                    $elemMatch : { "_id" : ObjectId(req.body.group_id) } 
+                }
+            },
+            { $pull: 
+                {
+                    "groups": {
+                        "_id" : ObjectId(req.body.group_id)
+                    }
+                } 
+            },
+            { new: true }
         ).then(function(msg) {
             console.log("msg: "+msg);
         });
@@ -79,3 +80,107 @@ exports.deleteContact = async function(req, res) {
         res.json({ message: "contact > group 삭제 실패: catch: err: " + err });
     }
 }
+
+// contact > receiver > insert
+exports.addContactGroupReceiver = async function(req, res) {
+    try {
+        await contact_m.findOneAndUpdate(
+            { 
+                "_id" : ObjectId(req.body.contact_id), 
+                "groups" : { 
+                    $elemMatch : { "_id" : ObjectId(req.body.group_id) } 
+                }
+            },
+            {
+                $push: { 
+                    "groups.$.receivers" : {  
+                        _id: ObjectId(),
+                        email: req.body.email,
+                        name: req.body.name 
+                    },
+                }
+            }, { new: true }
+        ).then(function(msg) {
+            console.log("msg: "+msg);
+        });
+        res.json({ message: "Contact group > receivers 추가 완료" });
+    } catch(err) {
+        res.json({ message: "Contact group > receivers 추가 실패: " + err });
+    }
+}
+
+// contact > receiver > update
+exports.updateContactGroupReceiver = async function(req, res) {
+    try {
+        await contact_m.findOneAndUpdate(
+            { 
+                "_id" : ObjectId(req.body.contact_id), 
+            },
+            { $set: { 
+                    "groups.$[idx0].receivers.$[idx1]": { 
+                        _id : ObjectId(req.body.receiver_id),
+                        email: req.body.email,
+                        name: req.body.name, 
+                    }
+                } 
+            }, 
+            {
+                arrayFilters: [
+                    {
+                        "idx0._id": ObjectId(req.body.group_id)
+                    }, 
+                    {
+                        "idx1._id": ObjectId(req.body.receiver_id)
+                    }
+                ]
+            }
+        ).then(function(msg) {
+            console.log("msg: "+msg);
+        });
+        res.json({ message: "contact > group > receivers 업데이트 성공" });
+    } catch(err) {
+        res.json({ message: "contact > group > receivers 업데이트 실패: catch: err: " + err });
+    }
+}
+
+// contact > receiver > delete
+exports.deleteContactGroupReceiver = async function(req, res) {
+    try {
+        await contact_m.findOneAndUpdate(
+            { 
+                "_id" : ObjectId(req.body.contact_id), 
+            },
+            { $pull: { 
+                    "groups.$[idx0].receivers": {
+                        _id : ObjectId(req.body.receiver_id),
+                        email: req.body.email,
+                        name: req.body.name, 
+                    }
+                } 
+            }, 
+            {
+                arrayFilters: [
+                    {
+                        "idx0._id": ObjectId(req.body.group_id)
+                    }, 
+                    {
+                        "idx1._id": ObjectId(req.body.receiver_id)
+                    }
+                ]
+            }
+        ).then(function(msg) {
+            console.log("msg: "+msg);
+        });
+        res.json({ message: "contact > group > receivers 삭제 성공" });
+    } catch(err) {
+        res.json({ message: "contact > group > receivers 삭제 실패: catch: err: " + err });
+    }
+}
+
+// contact > receiver > load
+/*
+exports.loadContactGroupReceiver = async function(req, res) {
+
+
+}
+*/

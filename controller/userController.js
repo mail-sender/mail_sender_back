@@ -1,8 +1,10 @@
 const log = require('../config/logger');
 const user_m = require("../models/user");
+const contact_m = require("../models/contact");
 const common = require("../lib/common");
 const bcrypt = require("bcrypt");
 const jwt = require('jsonwebtoken');
+const { ObjectId } = require('bson');
 const JWT_SECRET = require('../config').key;
 const JWT_OPTIONS = require('../config').option;
 
@@ -14,18 +16,29 @@ exports.addUser = function(req, res) {
             log.debug("존재하는 회원입니다."+req.body.email);
             res.json({ message: common.getErrorCode("user_exist") });
         } else {
+            contact_id = ObjectId();
+            const contact = new contact_m({
+                _id: contact_id
+            });
+            try {
+                contact.save();
+                res.json({ message: "contact _id 추가 완료" });
+            } catch(err) {
+                res.json({ message: err });
+            } 
             const user = new user_m({
                 name: req.body.name,
                 email: req.body.email,
                 password: this.bcryptPassword(req.body.password),
-                join_date: common.getCurrentDate()
+                join_date: common.getCurrentDate(),
+                contacts_id : contact_id
             });
             try {
                 const saveUser = user.save();
                 res.json({ message: common.getErrorCode("insert_success") });
             } catch(err) {
                 res.json({ message: err });
-            }
+            } 
         }
     });
 }

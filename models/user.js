@@ -20,8 +20,10 @@ const userSchema = mongoose.Schema({
 
     accounts: [accountSchema],
     body_formats: [bodyFormatSchema],
-    contacts_id: [{ type: ObjectId, ref: 'contact' }],
-
+    contacts_id: { 
+        type: ObjectId, 
+        ref: 'contact'
+    },
     join_date: {
         type: String,
         required: true,

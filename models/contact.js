@@ -4,7 +4,7 @@ const groupSchema = require('./group');
 
 const contactSchema = mongoose.Schema({
     _id: { type: ObjectId },
-    group: [groupSchema]
+    groups: [groupSchema]
 });
 
 module.exports = mongoose.model('contact', contactSchema);
