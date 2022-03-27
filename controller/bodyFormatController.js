@@ -29,7 +29,7 @@ exports.addBodyFormat = async function(req, res) {
 // bodyFormat > update 
 exports.updateBodyFormat = async function(req, res) {
     var bodyFormat_updates = {
-        _id: req.body.bodyformat_id,
+        _id: mongoose.Types.ObjectId(req.body.bodyformat_id), 
         format_name: req.body.format_name,
         main_txt: req.body.main_txt
     };

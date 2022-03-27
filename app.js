@@ -35,6 +35,10 @@ app.use('/account', accountRoute);
 const bodyFormatRoute = require("./routes/bodyFormat_r");
 app.use('/bodyformat', bodyFormatRoute);
 
+// contact route
+const contactRoute = require("./routes/contact_r");
+app.use('/contact', contactRoute);
+
 app.use('/', (req, res) => {
   res.send('just index, go to GET /test');
 });

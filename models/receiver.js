@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { listen } = require('../app');
 const ObjectId = mongoose.Schema.Types.ObjectId;
 
 const receiverSchema = mongoose.Schema({
@@ -12,6 +13,6 @@ const receiverSchema = mongoose.Schema({
         required: true,
     },
     details: {
-        type: list
+        type: Array,
     }
 });
